@@ -1,0 +1,273 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Encabezado -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-blue_primary mb-2">Reporte Mensual de Conciliaciones</h1>
+    <p class="text-gray-600">Análisis mensual consolidado de conciliaciones bancarias</p>
+  </div>
+
+  <!-- Filtros y acciones -->
+  <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+      <div>
+        <label for="anioSelect" class="block text-sm font-medium text-gray-700 mb-1">Año</label>
+        <select
+          id="anioSelect"
+          [(ngModel)]="anioSeleccionado"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          @for (anio of aniosDisponibles; track anio) {
+            <option [value]="anio">{{ anio }}</option>
+          }
+        </select>
+      </div>
+
+      <div>
+        <label for="mesSelect" class="block text-sm font-medium text-gray-700 mb-1">Mes</label>
+        <select
+          id="mesSelect"
+          [(ngModel)]="mesSeleccionado"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          @for (mes of mesesDisponibles; track mes.valor) {
+            <option [value]="mes.valor">{{ mes.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="flex gap-3">
+        <button
+          (click)="generarReporte()"
+          class="px-4 py-2 bg-blue_primary text-white rounded-md hover:bg-blue_secondary flex items-center"
+        >
+          <span class="material-icons mr-1">search</span>
+          Generar Reporte
+        </button>
+
+        <button
+          (click)="exportarExcel()"
+          [disabled]="conciliaciones.length === 0"
+          [ngClass]="conciliaciones.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+          class="px-4 py-2 text-white rounded-md flex items-center"
+        >
+          <span class="material-icons mr-1">download</span>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de carga y errores -->
+  @if (loading) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue_primary"></div>
+    </div>
+  } @else if (error) {
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+      <p>{{ error }}</p>
+    </div>
+  } @else if (conciliaciones.length === 0) {
+    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <span class="material-icons text-blue-400">info</span>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-blue-700">
+            Seleccione año y mes, luego haga clic en "Generar Reporte" para ver el consolidado mensual.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Tarjetas de resumen -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue_primary">
+        <h3 class="text-lg font-medium text-gray-700 mb-2">Total Conciliaciones</h3>
+        <p class="text-3xl font-bold text-blue_primary">{{ totalConciliaciones }}</p>
+        <p class="text-sm text-gray-500 mt-2">
+          {{ getNombreMes(mesSeleccionado) }} {{ anioSeleccionado }}
+        </p>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-red-500">
+        <h3 class="text-lg font-medium text-gray-700 mb-2">Conciliaciones Descuadradas</h3>
+        <p class="text-3xl font-bold text-red-600">{{ totalDescuadradas }}</p>
+        <p class="text-sm text-gray-500 mt-2">
+          {{ calcularPorcentaje(totalDescuadradas, totalConciliaciones) }}% del total
+        </p>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-yellow-500">
+        <h3 class="text-lg font-medium text-gray-700 mb-2">Diferencia Física</h3>
+        <p class="text-3xl font-bold" [ngClass]="getColorDiferencia(totalDiferenciaFisica)">
+          {{ totalDiferenciaFisica }}
+        </p>
+        <p class="text-sm text-gray-500 mt-2">Unidades desbalanceadas</p>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-orange-500">
+        <h3 class="text-lg font-medium text-gray-700 mb-2">Diferencia en Valor</h3>
+        <p class="text-3xl font-bold" [ngClass]="getColorDiferencia(totalDiferenciaValor)">
+          {{ formatearMoneda(totalDiferenciaValor) }}
+        </p>
+        <p class="text-sm text-gray-500 mt-2">Monto total de diferencias</p>
+      </div>
+    </div>
+
+    <!-- Resumen estadístico -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="bg-blue_primary text-white px-4 py-3 flex justify-between items-center cursor-pointer"
+           (click)="toggleSeccion('resumen')">
+        <h3 class="text-lg font-medium">Resumen Estadístico</h3>
+        <span class="material-icons transition-transform duration-200"
+              [class.rotate-180]="!showResumenEstadistico">
+          expand_more
+        </span>
+      </div>
+
+      @if (showResumenEstadistico) {
+        <div class="p-4">
+          <!-- Sección de estados -->
+          <h4 class="text-lg font-medium text-gray-700 mb-3">Distribución por Estado</h4>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            @for (estado of estados; track estado) {
+              <div class="bg-white border rounded-lg p-3" [ngClass]="getColorEstado(estado)">
+                <h5 class="font-medium mb-2">{{ estado }}</h5>
+                <div class="flex justify-between items-baseline">
+                  <p class="text-2xl font-bold">{{ contarPorEstado(estado) }}</p>
+                  <p class="text-lg">{{ calcularPorcentaje(contarPorEstado(estado), totalConciliaciones) }}%</p>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div class="h-2.5 rounded-full"
+                       [ngStyle]="{'width': calcularPorcentaje(contarPorEstado(estado), totalConciliaciones) + '%'}"
+                       [ngClass]="{'bg-green-600': estado === 'Aceptada',
+                                   'bg-yellow-500': estado === 'Bajo revisión',
+                                   'bg-blue-600': estado === 'Cuadrada',
+                                   'bg-red-600': estado === 'Descuadrada'}">
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Sección de sucursales -->
+          <h4 class="text-lg font-medium text-gray-700 mb-3">Conciliaciones por Sucursal</h4>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sucursal</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Conciliaciones</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuadradas</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Porcentaje</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                @for (sucursal of sucursales; track sucursal) {
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue_primary">{{ sucursal }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {{ conciliacionesPorSucursal.get(sucursal)?.length || 0 }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
+                      {{ contarDescuadradasPorSucursal(sucursal) }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {{ calcularPorcentaje(contarDescuadradasPorSucursal(sucursal),
+                         conciliacionesPorSucursal.get(sucursal)?.length || 0) }}%
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Detalle de conciliaciones -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="bg-blue_primary text-white px-4 py-3 flex justify-between items-center cursor-pointer"
+           (click)="toggleSeccion('detalle')">
+        <h3 class="text-lg font-medium">Detalle de Conciliaciones</h3>
+        <span class="material-icons transition-transform duration-200"
+              [class.rotate-180]="!showDetalleConciliaciones">
+          expand_more
+        </span>
+      </div>
+
+      @if (showDetalleConciliaciones) {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sucursal</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia Física</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia Valor</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              @for (conciliacion of conciliaciones; track conciliacion.idConciliacion) {
+                <tr class="hover:bg-gray-50" [ngClass]="{'bg-red-50': conciliacion.estadoConciliacion.codigoEstado === 'D'}">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ conciliacion.idConciliacion }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearFechaParaMostrar(conciliacion.fechaConciliacion) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{ conciliacion.sucursalProducto.sucursal.nombreSucursal }}
+                    <span class="text-xs text-gray-500 block">{{ conciliacion.sucursalProducto.sucursal.codigoSucursal }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{ conciliacion.sucursalProducto.producto.nombreProducto }}
+                    <span class="text-xs text-gray-500 block">{{ conciliacion.sucursalProducto.producto.codigoProducto }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" [ngClass]="getColorDiferencia(conciliacion.diferenciaFisica)">
+                    {{ conciliacion.diferenciaFisica }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" [ngClass]="getColorDiferencia(conciliacion.diferenciaValor)">
+                    {{ formatearMoneda(conciliacion.diferenciaValor) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="getColorEstado(conciliacion.estadoConciliacion.descripcion)">
+                      {{ conciliacion.estadoConciliacion.descripcion }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <a [routerLink]="['/dashboard/conciliaciones', conciliacion.idConciliacion]"
+                         class="text-blue_primary hover:text-blue_secondary">
+                        <span class="material-icons">visibility</span>
+                      </a>
+                      <a [routerLink]="['/dashboard/conciliaciones/editar', conciliacion.idConciliacion]"
+                         class="text-gray-600 hover:text-gray-900">
+                        <span class="material-icons">edit</span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-between mt-6">
+      <a routerLink="/dashboard/reportes" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 flex items-center">
+        <span class="material-icons mr-1">arrow_back</span>
+        Volver
+      </a>
+      <button
+        (click)="exportarExcel()"
+        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center"
+      >
+        <span class="material-icons mr-1">download</span>
+        Exportar Excel
+      </button>
+    </div>
+  }
+</div>

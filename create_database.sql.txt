@@ -1,0 +1,83 @@
+-- Script para crear la estructura de la base de datos
+-- Nombre: create_database.sql
+-- Descripción: Crea la base de datos y tablas para la aplicación de conciliación bancaria Axity
+
+-- Crear la base de datos
+CREATE DATABASE axity_conciliation_db 
+WITH ENCODING = 'UTF8' 
+LC_COLLATE = 'en_US.UTF-8' 
+LC_CTYPE = 'en_US.UTF-8' 
+TEMPLATE = template0;
+
+-- Conectar a la base de datos creada
+\c axity_conciliation_db
+
+-- Crear las tablas
+
+-- Tabla de Sucursales (Oficinas)
+CREATE TABLE sucursales (
+    codigo_sucursal VARCHAR(5) PRIMARY KEY,
+    nombre_sucursal VARCHAR(50) NOT NULL
+);
+
+-- Tabla de Productos
+CREATE TABLE productos (
+    codigo_producto VARCHAR(5) PRIMARY KEY,
+    nombre_producto VARCHAR(50) NOT NULL
+);
+
+-- Tabla de Documentos
+CREATE TABLE documentos (
+    codigo_documento VARCHAR(10) PRIMARY KEY,
+    descripcion VARCHAR(100)
+);
+
+-- Tabla de relación Sucursal-Producto
+CREATE TABLE sucursal_producto (
+    codigo_sucursal VARCHAR(5) NOT NULL,
+    codigo_producto VARCHAR(5) NOT NULL,
+    codigo_documento VARCHAR(10) NOT NULL,
+    PRIMARY KEY (codigo_sucursal, codigo_producto, codigo_documento),
+    FOREIGN KEY (codigo_sucursal) REFERENCES sucursales(codigo_sucursal),
+    FOREIGN KEY (codigo_producto) REFERENCES productos(codigo_producto),
+    FOREIGN KEY (codigo_documento) REFERENCES documentos(codigo_documento)
+);
+
+-- Tabla de Estados de Conciliación
+-- Nota: Se define con VARCHAR(2) según el cambio solicitado
+CREATE TABLE estados_conciliacion (
+    codigo_estado VARCHAR(2) PRIMARY KEY,
+    descripcion VARCHAR(50) NOT NULL
+);
+
+-- Tabla principal de Conciliaciones
+CREATE TABLE conciliaciones (
+    id_conciliacion SERIAL PRIMARY KEY,
+    fecha_conciliacion DATE NOT NULL,
+    codigo_sucursal VARCHAR(5) NOT NULL,
+    codigo_producto VARCHAR(5) NOT NULL,
+    codigo_documento VARCHAR(10) NOT NULL,
+    diferencia_fisica DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    diferencia_valor DECIMAL(20,2) NOT NULL DEFAULT 0.00,
+    codigo_estado VARCHAR(2) NOT NULL,  -- Ajustado a VARCHAR(2) según el cambio solicitado
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (codigo_sucursal, codigo_producto, codigo_documento) 
+        REFERENCES sucursal_producto(codigo_sucursal, codigo_producto, codigo_documento),
+    FOREIGN KEY (codigo_estado) REFERENCES estados_conciliacion(codigo_estado)
+);
+
+-- Índices para mejorar el rendimiento
+CREATE INDEX idx_conciliaciones_fecha ON conciliaciones(fecha_conciliacion);
+CREATE INDEX idx_conciliaciones_sucursal ON conciliaciones(codigo_sucursal);
+CREATE INDEX idx_conciliaciones_producto ON conciliaciones(codigo_producto);
+CREATE INDEX idx_conciliaciones_estado ON conciliaciones(codigo_estado);
+
+-- Comentarios explicativos en las tablas
+COMMENT ON TABLE sucursales IS 'Catálogo de sucursales u oficinas';
+COMMENT ON TABLE productos IS 'Catálogo de productos bancarios';
+COMMENT ON TABLE documentos IS 'Catálogo de tipos de documentos';
+COMMENT ON TABLE sucursal_producto IS 'Relación entre sucursales y productos disponibles';
+COMMENT ON TABLE estados_conciliacion IS 'Catálogo de estados posibles para una conciliación';
+COMMENT ON TABLE conciliaciones IS 'Registro de conciliaciones bancarias';
+
+-- Fin del script

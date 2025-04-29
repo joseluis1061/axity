@@ -1,0 +1,141 @@
+<div class="bg-white min-h-[30vh] min-w-[500px] border-none rounded-xl p-5 relative">
+  <!-- Header -->
+  <div class="flex justify-between items-start mb-4 border-b-2">
+    <div class="flex flex-col gap-2">
+      <h2 class="text-blue_primary text-lg font-bold">Cargar archivo de conciliaciones</h2>
+      <p class="text-gray-600 text-sm mb-2">Este proceso permitirá cargar un archivo del sistema AS400 para generar conciliaciones.</p>
+    </div>
+
+    <a
+      type="button"
+      class="flex justify-center items-center border-none w-8 text-2xl text-blue_primary cursor-pointer transition-transform duration-200 hover:text-red-500 hover:rotate-180"
+      (click)="closeDialog(false)"
+    >
+      X
+    </a>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="cargarForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Año -->
+      <div class="flex flex-col">
+        <label for="anio" class="text-sm font-medium text-gray-700 mb-1">Año</label>
+        <select
+          id="anio"
+          formControlName="anio"
+          class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          <option value="">Seleccione un año</option>
+          @for (anio of anios; track anio) {
+            <option [value]="anio">{{ anio }}</option>
+          }
+        </select>
+        @if (cargarForm.get('anio')?.invalid && cargarForm.get('anio')?.touched) {
+          <p class="text-red-500 text-xs mt-1">El año es obligatorio</p>
+        }
+      </div>
+
+      <!-- Mes -->
+      <div class="flex flex-col">
+        <label for="mes" class="text-sm font-medium text-gray-700 mb-1">Mes</label>
+        <select
+          id="mes"
+          formControlName="mes"
+          class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          <option value="">Seleccione un mes</option>
+          @for (mes of meses; track mes.value) {
+            <option [value]="mes.value">{{ mes.descripcion }}</option>
+          }
+        </select>
+        @if (cargarForm.get('mes')?.invalid && cargarForm.get('mes')?.touched) {
+          <p class="text-red-500 text-xs mt-1">El mes es obligatorio</p>
+        }
+      </div>
+    </div>
+
+    <!-- Carga de archivo -->
+    <div class="flex flex-col mt-2">
+      <label for="archivoAS400" class="text-sm font-medium text-gray-700 mb-1">Archivo de conciliaciones (AS400)</label>
+      <div class="relative border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
+        @if (!selectedFile) {
+          <div class="space-y-2">
+            <span class="material-icons text-4xl text-blue_primary">cloud_upload</span>
+            <p class="text-sm text-gray-500">Haga clic para seleccionar un archivo o arrástrelo aquí</p>
+            <p class="text-xs text-gray-400">Formatos aceptados: archivos de texto plano del sistema AS400</p>
+            <button
+              type="button"
+              class="mt-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md border border-gray-300"
+              (click)="fileInput.click()"
+            >
+              Seleccionar archivo
+            </button>
+          </div>
+        } @else {
+          <div class="flex flex-col items-center justify-center gap-2">
+            <div class="flex items-center gap-2">
+              <span class="material-icons text-green-600">check_circle</span>
+              <span class="text-sm text-gray-700">{{ selectedFile.name }}</span>
+            </div>
+            <button
+              type="button"
+              class="mt-2 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-xs border border-gray-300"
+              (click)="fileInput.click()"
+            >
+              Cambiar archivo
+            </button>
+          </div>
+        }
+        <input
+          #fileInput
+          type="file"
+          id="archivoAS400"
+          class="hidden"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+      @if (cargarForm.get('archivoAS400')?.invalid && cargarForm.get('archivoAS400')?.touched) {
+        <p class="text-red-500 text-xs mt-1">Debe seleccionar un archivo</p>
+      }
+    </div>
+
+    <!-- Mensajes de error y éxito -->
+    @if (error) {
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-4" role="alert">
+        <p class="text-sm">{{ error }}</p>
+      </div>
+    }
+
+    @if (success) {
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-4" role="alert">
+        <p class="text-sm">{{ success }}</p>
+      </div>
+    }
+
+    <!-- Botones de acción -->
+    <div class="flex justify-end gap-3 mt-4">
+      <button
+        type="button"
+        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+        (click)="closeDialog(false)"
+        [disabled]="loading"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-blue_primary text-white rounded-md hover:bg-blue_secondary flex items-center"
+        [disabled]="cargarForm.invalid || loading"
+      >
+        @if (loading) {
+          <div class="animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent mr-2"></div>
+          Procesando...
+        } @else {
+          <span class="material-icons mr-1">cloud_upload</span>
+          Procesar archivo
+        }
+      </button>
+    </div>
+  </form>
+</div>

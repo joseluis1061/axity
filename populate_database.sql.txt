@@ -1,0 +1,90 @@
+-- Script para poblar la base de datos
+-- Nombre: populate_database.sql
+-- Descripción: Inserta datos iniciales para la aplicación de conciliación bancaria Axity
+
+-- Conectar a la base de datos
+\c axity_conciliation_db
+
+-- Inserción de datos iniciales
+
+-- Estados de conciliación
+INSERT INTO estados_conciliacion (codigo_estado, descripcion) VALUES
+('A', 'Aceptada'),
+('B', 'Bajo revisión'),
+('C', 'Cuadrada'),
+('D', 'Descuadrada');
+
+-- Sucursales
+INSERT INTO sucursales (codigo_sucursal, nombre_sucursal) VALUES
+('00101', 'Sucursal A'),
+('00102', 'Sucursal B'),
+('00103', 'Sucursal C');
+
+-- Productos
+INSERT INTO productos (codigo_producto, nombre_producto) VALUES
+('PR01', 'Producto 1'),
+('PR02', 'Producto 2'),
+('PR03', 'Producto 3');
+
+-- Documentos
+INSERT INTO documentos (codigo_documento, descripcion) VALUES
+('DOC001', 'Documento de conciliación estándar');
+
+-- Relaciones Sucursal-Producto
+INSERT INTO sucursal_producto (codigo_sucursal, codigo_producto, codigo_documento) VALUES
+('00101', 'PR01', 'DOC001'),
+('00101', 'PR02', 'DOC001'),
+('00101', 'PR03', 'DOC001'),
+('00102', 'PR01', 'DOC001'),
+('00102', 'PR02', 'DOC001'),
+('00102', 'PR03', 'DOC001'),
+('00103', 'PR01', 'DOC001'),
+('00103', 'PR02', 'DOC001'),
+('00103', 'PR03', 'DOC001');
+
+-- Conciliaciones (datos de ejemplo para tres meses)
+INSERT INTO conciliaciones (fecha_conciliacion, codigo_sucursal, codigo_producto, codigo_documento, diferencia_fisica, diferencia_valor, codigo_estado) VALUES
+-- Enero 2025
+('2025-01-01', '00101', 'PR01', 'DOC001', 0.00, 3081673400.00, 'C'),
+('2025-01-01', '00101', 'PR02', 'DOC001', 0.00, 691624500.00, 'C'),
+('2025-01-01', '00101', 'PR03', 'DOC001', 19.50, 2976795600.00, 'D'),
+('2025-01-01', '00102', 'PR01', 'DOC001', 55.00, 422793679.00, 'B'),
+('2025-01-01', '00102', 'PR02', 'DOC001', 0.00, 895714450.00, 'A'),
+('2025-01-01', '00102', 'PR03', 'DOC001', 9.10, 150.00, 'C'),
+('2025-01-01', '00103', 'PR01', 'DOC001', 29.00, 19.00, 'A'),
+('2025-01-01', '00103', 'PR02', 'DOC001', 19.50, 1.00, 'D'),
+('2025-01-01', '00103', 'PR03', 'DOC001', 0.00, 0.00, 'C'),
+
+-- Febrero 2025
+('2025-02-01', '00101', 'PR01', 'DOC001', 0.00, 3081673400.00, 'C'),
+('2025-02-01', '00101', 'PR02', 'DOC001', 0.00, 691624500.00, 'B'),
+('2025-02-01', '00101', 'PR03', 'DOC001', 19.50, 2976795600.00, 'D'),
+('2025-02-01', '00102', 'PR01', 'DOC001', 55.00, 422793679.00, 'C'),
+('2025-02-01', '00102', 'PR02', 'DOC001', 0.00, 895714450.00, 'D'),
+('2025-02-01', '00102', 'PR03', 'DOC001', 9.10, 150.00, 'C'),
+('2025-02-01', '00103', 'PR01', 'DOC001', 29.00, 19.00, 'A'),
+('2025-02-01', '00103', 'PR02', 'DOC001', 19.50, 1.00, 'A'),
+('2025-02-01', '00103', 'PR03', 'DOC001', 0.00, 0.00, 'B'),
+
+-- Marzo 2025
+('2025-03-01', '00101', 'PR01', 'DOC001', 0.00, 3081673400.00, 'A'),
+('2025-03-01', '00101', 'PR02', 'DOC001', 0.00, 691624500.00, 'B'),
+('2025-03-01', '00101', 'PR03', 'DOC001', 19.50, 2976795600.00, 'A'),
+('2025-03-01', '00102', 'PR01', 'DOC001', 55.00, 422793679.00, 'D'),
+('2025-03-01', '00102', 'PR02', 'DOC001', 0.00, 895714450.00, 'D'),
+('2025-03-01', '00102', 'PR03', 'DOC001', 9.10, 150.00, 'C'),
+('2025-03-01', '00103', 'PR01', 'DOC001', 29.00, 19.00, 'A'),
+('2025-03-01', '00103', 'PR02', 'DOC001', 19.50, 1.00, 'C'),
+('2025-03-01', '00103', 'PR03', 'DOC001', 0.00, 0.00, 'B');
+
+-- Agregar más registros de ejemplo para demostrar reportes
+
+-- Abril 2025 (más conciliaciones descuadradas)
+INSERT INTO conciliaciones (fecha_conciliacion, codigo_sucursal, codigo_producto, codigo_documento, diferencia_fisica, diferencia_valor, codigo_estado) VALUES
+('2025-04-01', '00101', 'PR01', 'DOC001', 10.25, 587432.00, 'D'),
+('2025-04-01', '00101', 'PR02', 'DOC001', 5.50, 1234870.00, 'D'),
+('2025-04-01', '00102', 'PR01', 'DOC001', 22.75, 4789234.00, 'D'),
+('2025-04-01', '00102', 'PR03', 'DOC001', 0.00, 7891234.00, 'B'),
+('2025-04-01', '00103', 'PR02', 'DOC001', 37.25, 2345789.00, 'D');
+
+-- Fin del script

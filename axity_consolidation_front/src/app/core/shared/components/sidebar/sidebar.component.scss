@@ -1,0 +1,108 @@
+.menu-bar-item {
+  cursor: pointer;
+  border: none;
+
+  user-select: none;
+  min-width: 34px;
+  width: 100%;
+
+  line-height: 26px;
+  padding: 0 16px;
+}
+
+.menu-bar-item:hover {
+  background-color: rgb(208, 208, 208);
+}
+
+.menu {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 180px;
+  // max-width: 280px;
+  width: 240px;
+  background-color: #0f385a;
+  padding: 6px 0;
+  color: white;
+
+  box-shadow: -1px 1px 7px 0px rgba(31,178,222,0.75);
+  // -webkit-box-shadow: -1px 1px 7px 0px rgba(255,255,255,0.75);
+  // -moz-box-shadow: -1px 1px 7px 0px rgba(0,0,0,0.75);
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.menu hr {
+  width: 100%;
+  color: rgba(0, 0, 0, 0.12);
+}
+
+.menu .menu-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu .menu-item {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+
+  user-select: none;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 8px;
+
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: start;
+  flex-direction: row;
+  gap: 8px;
+  text-align: left;
+  width: 100%;
+}
+
+.menu-item > span {
+  display: flex;
+  flex-direction: row;
+  width: 25px;
+  justify-content: flex-start;
+}
+
+.menu .menu-item:hover {
+  // background-color: rgb(208, 208, 208);
+  background-color: rgb(31, 178, 222);
+}
+
+.menu .menu-item[role='menuitemradio'][aria-checked='true'] {
+  // background-color: rgb(225, 225, 225);
+  background-color: #1FB2DE;
+}
+.menu .menu-item[role='menuitemcheckbox'][aria-checked='true'] {
+  // background-color: rgb(225, 225, 225);
+  background-color: #1FB2DE;
+
+}
+.menu .menu-item:active {
+  // background-color: rgb(170, 170, 170);
+  background-color: #1FB2DE;
+}
+
+.menu-bar-item[aria-expanded='true'],
+.menu-item[aria-expanded='true'] {
+  // background-color: rgb(208, 208, 208) !important;
+  background-color: #1FB2DE !important;
+
+}
+
+.btn-aside-dropdown{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.icon-iten{
+  width: 24px;
+}

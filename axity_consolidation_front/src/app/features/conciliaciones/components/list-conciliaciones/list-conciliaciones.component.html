@@ -1,0 +1,203 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Encabezado -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-blue_primary mb-2">Listado de Conciliaciones</h1>
+    <p class="text-gray-600">Gestión y visualización de todas las conciliaciones bancarias</p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <h2 class="text-lg font-semibold text-blue_primary mb-4">Filtros</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Filtro por fecha -->
+      <div class="mb-4">
+        <label for="fechaFilter" class="block text-sm font-medium text-gray-700 mb-1">Fecha Conciliación</label>
+        <input
+          type="date"
+          id="fechaFilter"
+          [(ngModel)]="fechaFilter"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+      </div>
+
+      <!-- Filtro por sucursal -->
+      <div class="mb-4">
+        <label for="sucursalFilter" class="block text-sm font-medium text-gray-700 mb-1">Sucursal</label>
+        <select
+          id="sucursalFilter"
+          [(ngModel)]="sucursalFilter"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          <option value="">Todas</option>
+          @for (sucursal of sucursales; track sucursal) {
+            <option [value]="sucursal">{{ sucursal }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Filtro por producto -->
+      <div class="mb-4">
+        <label for="productoFilter" class="block text-sm font-medium text-gray-700 mb-1">Producto</label>
+        <select
+          id="productoFilter"
+          [(ngModel)]="productoFilter"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          <option value="">Todos</option>
+          @for (producto of productos; track producto) {
+            <option [value]="producto">{{ producto }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Filtro por estado -->
+      <div class="mb-4">
+        <label for="estadoFilter" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+        <select
+          id="estadoFilter"
+          [(ngModel)]="estadoFilter"
+          class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue_secondary"
+        >
+          <option value="">Todos</option>
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Botones de acción para filtros -->
+    <div class="flex justify-end gap-2 mt-2">
+      <button
+        (click)="resetFilters()"
+        class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+      >
+        Limpiar
+      </button>
+      <button
+        (click)="applyFilters()"
+        class="px-4 py-2 bg-blue_primary text-white rounded-md hover:bg-blue_secondary"
+      >
+        Aplicar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Acciones -->
+  <div class="flex justify-between mb-6">
+    <div class="flex gap-2">
+      <button
+        (click)="openCargarConciliacionModal()"
+        class="px-4 py-2 bg-blue_primary text-white rounded-md hover:bg-blue_secondary flex items-center"
+      >
+        <span class="material-icons mr-1">add</span>
+        Nueva conciliación
+      </button>
+      <!-- <button
+        routerLink="/dashboard/conciliaciones/proceso-batch"
+        class="px-4 py-2 border border-blue_primary text-blue_primary rounded-md hover:bg-blue_light flex items-center"
+      >
+        <span class="material-icons mr-1">batch_prediction</span>
+        Proceso batch
+      </button> -->
+    </div>
+
+    <button
+      routerLink="/dashboard/conciliaciones/descuadradas"
+      class="px-4 py-2 bg-magenta text-white rounded-md hover:bg-magenta_dark flex items-center"
+    >
+      <span class="material-icons mr-1">error_outline</span>
+      Ver descuadradas
+    </button>
+  </div>
+
+  <!-- Estado de carga y errores -->
+  @if (loading) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue_primary"></div>
+    </div>
+  } @else if (error) {
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+      <p>{{ error }}</p>
+      <button
+        (click)="loadConciliaciones()"
+        class="mt-2 px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else if (filteredConciliaciones.length === 0) {
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <span class="material-icons text-yellow-400">info</span>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-yellow-700">
+            No se encontraron conciliaciones con los filtros seleccionados.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Tabla de conciliaciones -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sucursal</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia Física</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia Valor</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          @for (conciliacion of filteredConciliaciones; track conciliacion.idConciliacion) {
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ conciliacion.idConciliacion }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatDate(conciliacion.fechaConciliacion) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ conciliacion.sucursalProducto.sucursal.nombreSucursal }}
+                <span class="text-xs text-gray-500 block">{{ conciliacion.sucursalProducto.sucursal.codigoSucursal }}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ conciliacion.sucursalProducto.producto.nombreProducto }}
+                <span class="text-xs text-gray-500 block">{{ conciliacion.sucursalProducto.producto.codigoProducto }}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ conciliacion.diferenciaFisica }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                  [ngClass]="conciliacion.diferenciaValor > 0 ? 'text-red-600' : 'text-green-600'">
+                {{ formatCurrency(conciliacion.diferenciaValor) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="getStatusColor(conciliacion.codigoEstado)">
+                  {{ conciliacion.estadoConciliacion.descripcion }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <a [routerLink]="['/dashboard/conciliaciones', conciliacion.idConciliacion]"
+                     class="text-blue_primary hover:text-blue_secondary">
+                    <span class="material-icons">visibility</span>
+                  </a>
+                  <a [routerLink]="['/dashboard/conciliaciones/editar', conciliacion.idConciliacion]"
+                     class="text-gray-600 hover:text-gray-900">
+                    <span class="material-icons">edit</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

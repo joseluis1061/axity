@@ -1,0 +1,40 @@
+<div class="flex flex-col h-screen w-screen max-h-screen bg-blue_light overflow-hidden">
+
+  <main class="px-12 py-3 w-full h-[calc(100vh-80px)] overflow-y-auto">
+    <div class="flex justify-center items-center w-full border-b-2 border-blue_primary pb-1">
+      <h1 class="text-2xl text-blue_primary mb-3">Sistema de Conciliación Bancaria</h1>
+    </div>
+
+    <div class="flex flex-col gap-5 mt-5">
+      <div class="w-full">
+        <h2 class="text-magenta text-xl">Selecciona la acción que deseas realizar</h2>
+      </div>
+
+      <div class="flex flex-wrap justify-start items-center gap-5">
+
+        @for(item of cardItems; track item){
+          <!-- CARD -->
+          <div
+            routerLink="/dashboard/{{item.link}}"
+            class="card flex flex-col gap-4 p-5 bg-white rounded-lg shadow-md min-w-[300px] max-w-[320px] cursor-pointer
+            transition-all duration-300
+            hover:shadow-[8px_8px_15px_rgba(15,56,90,0.5)]"
+          >
+            <div class="flex justify-start items-center gap-4">
+              <div class="bg-blue_light p-3 rounded-full">
+                <span class="material-icons text-blue_primary text-2xl">
+                  {{ getIconForCard(item.alt) }}
+                </span>
+              </div>
+              <p class="text-blue_primary font-bold text-md">{{item.title}}</p>
+            </div>
+            <p class="text-blue_primary h-24 overflow-auto">
+              {{item.description}}
+            </p>
+          </div>
+        }
+
+      </div>
+    </div>
+  </main>
+</div>

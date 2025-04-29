@@ -1,0 +1,173 @@
+<div class="w-72 min-h-screen h-screen bg-blue_primary">
+  <div cdkMenuBar class="flex flex-col items-start justify-start h-full px-5 py-4 gap-5 overflow-y-auto">
+    <!-- Logo / home -->
+    <div cdkMenuItem class="flex flex-col w-full items-center justify-center bg-blue_primary cursor-pointer mb-4" routerLink="/dashboard/home">
+      <img class="w-48" src="assets/icons/logo-axity-bank.png" alt="Logo Axity Bank">
+    </div>
+
+    <!-- Dashboard -->
+    <button type="button"
+      class="btn-aside-dropdown"
+      routerLink="/dashboard/home"
+      cdkMenuItem
+    >
+      <span class="material-icons text-white mr-2">dashboard</span>
+      <span class="flex-1 text-left whitespace-nowrap text-white">
+        Dashboard
+      </span>
+    </button>
+
+    <!-- Conciliaciones -->
+    <button type="button"
+      class="btn-aside-dropdown"
+      (click)="toggleConciliaciones()"
+      cdkMenuItem [cdkMenuTriggerFor]="conciliaciones"
+    >
+      <span class="material-icons text-white mr-2">sync_alt</span>
+      <span class="flex-1 ml-1 text-left whitespace-nowrap text-white">
+        Conciliaciones
+      </span>
+      <span class="material-icons text-white transition-transform duration-200"
+            [class.rotate-180]="showConciliaciones()">
+        expand_more
+      </span>
+    </button>
+
+
+
+    <!-- Reportes -->
+    <button type="button"
+      class="btn-aside-dropdown"
+      (click)="toggleReportes()"
+      cdkMenuItem [cdkMenuTriggerFor]="reportes"
+    >
+      <span class="material-icons text-white mr-2">assessment</span>
+      <span class="flex-1 ml-1 text-left whitespace-nowrap text-white">
+        Reportes
+      </span>
+      <span class="material-icons text-white transition-transform duration-200"
+            [class.rotate-180]="showReportes()">
+        expand_more
+      </span>
+    </button>
+
+
+    <!-- Catálogos -->
+    <!-- <button type="button"
+      class="btn-aside-dropdown"
+      (click)="toggleCatalogos()"
+      cdkMenuItem [cdkMenuTriggerFor]="catalogos"
+    >
+      <span class="material-icons text-white mr-2">category</span>
+      <span class="flex-1 ml-1 text-left whitespace-nowrap text-white">
+        Catálogos
+      </span>
+      <span class="material-icons text-white transition-transform duration-200"
+            [class.rotate-180]="showCatalogos()">
+        expand_more
+      </span>
+    </button> -->
+
+    <!-- Administración -->
+    <!-- <button type="button"
+      class="btn-aside-dropdown"
+      (click)="toggleAdmin()"
+      cdkMenuItem [cdkMenuTriggerFor]="admin"
+    >
+      <span class="material-icons text-white mr-2">settings</span>
+      <span class="flex-1 ml-1 text-left whitespace-nowrap text-white">
+        Administración
+      </span>
+      <span class="material-icons text-white transition-transform duration-200"
+            [class.rotate-180]="showAdmin()">
+        expand_more
+      </span>
+    </button> -->
+  </div>
+
+
+</div>
+
+<!-- Conciliaciones menú -->
+<ng-template #conciliaciones>
+  <div class="menu" cdkMenu>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/conciliaciones/list">
+      <span class="material-icons mr-2">list</span>
+      <p>Listar Conciliaciones</p>
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/conciliaciones/descuadradas">
+      <span class="material-icons mr-2">error_outline</span>
+      Conciliaciones Descuadradas
+    </button>
+    <!-- <button class="menu-item" cdkMenuItem routerLink="/dashboard/conciliaciones/proceso-batch">
+      <span class="material-icons mr-2">batch_prediction</span>
+      Proceso Batch
+    </button> -->
+    <!-- <button class="menu-item" cdkMenuItem routerLink="/dashboard/conciliaciones/nueva">
+      <span class="material-icons mr-2">add_circle_outline</span>
+      Nueva Conciliación
+    </button> -->
+  </div>
+</ng-template>
+
+<!-- Catálogos menú -->
+<ng-template #catalogos>
+  <div class="menu" cdkMenu>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/catalogos/sucursales">
+      <span class="material-icons mr-2">store</span>
+      Sucursales
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/catalogos/productos">
+      <span class="material-icons mr-2">inventory_2</span>
+      Productos
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/catalogos/documentos">
+      <span class="material-icons mr-2">description</span>
+      Documentos
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/catalogos/estados-conciliacion">
+      <span class="material-icons mr-2">fact_check</span>
+      Estados de Conciliación
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/catalogos/sucursal-producto">
+      <span class="material-icons mr-2">link</span>
+      Relaciones Sucursal-Producto
+    </button>
+  </div>
+</ng-template>
+
+<!-- Reportes menú -->
+<ng-template #reportes>
+  <div class="menu" cdkMenu>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/reportes/consolidado-mensual">
+      <span class="material-icons mr-2">calendar_month</span>
+      Consolidado Mensual
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/reportes/por-sucursal">
+      <span class="material-icons mr-2">location_city</span>
+      Por Sucursal
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/reportes/por-producto">
+      <span class="material-icons mr-2">category</span>
+      Por Producto
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/reportes/descuadradas">
+      <span class="material-icons mr-2">trending_down</span>
+      Descuadrados
+    </button>
+  </div>
+</ng-template>
+
+<!-- Admin menú -->
+<ng-template #admin>
+  <div class="menu" cdkMenu>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/admin/usuarios">
+      <span class="material-icons mr-2">people</span>
+      Usuarios
+    </button>
+    <button class="menu-item" cdkMenuItem routerLink="/dashboard/admin/configuracion">
+      <span class="material-icons mr-2">settings</span>
+      Configuración
+    </button>
+  </div>
+</ng-template>
