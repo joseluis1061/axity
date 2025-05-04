@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.domain.service.impl;
 
 import com.josedev.axity_consolidation_back.domain.model.Sucursal;
-import com.josedev.axity_consolidation_back.domain.service.SucursalService;
+import com.josedev.axity_consolidation_back.domain.repository.SucursalService;
 import com.josedev.axity_consolidation_back.persistence.entity.SucursalEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.SucursalMapper;
 import com.josedev.axity_consolidation_back.persistence.repository.SucursalRepository;

@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.domain.service.impl;
 
 import com.josedev.axity_consolidation_back.domain.model.Documento;
-import com.josedev.axity_consolidation_back.domain.service.DocumentoService;
+import com.josedev.axity_consolidation_back.domain.repository.DocumentoService;
 import com.josedev.axity_consolidation_back.persistence.entity.DocumentoEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.DocumentoMapper;
 import com.josedev.axity_consolidation_back.persistence.repository.DocumentoRepository;

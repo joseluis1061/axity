@@ -2,7 +2,7 @@ package com.josedev.axity_consolidation_back.web.controller;
 
 import com.josedev.axity_consolidation_back.domain.model.Conciliacion;
 import com.josedev.axity_consolidation_back.domain.model.SucursalProductoId;
-import com.josedev.axity_consolidation_back.domain.service.ConciliacionService;
+import com.josedev.axity_consolidation_back.domain.repository.ConciliacionService;
 import com.josedev.axity_consolidation_back.web.dto.ConciliacionDTO;
 import com.josedev.axity_consolidation_back.web.mapper.ConciliacionDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;

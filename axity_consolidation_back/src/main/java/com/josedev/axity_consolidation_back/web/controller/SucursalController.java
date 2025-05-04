@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.web.controller;
 
 import com.josedev.axity_consolidation_back.domain.model.Sucursal;
-import com.josedev.axity_consolidation_back.domain.service.SucursalService;
+import com.josedev.axity_consolidation_back.domain.repository.SucursalService;
 import com.josedev.axity_consolidation_back.web.dto.SucursalDTO;
 import com.josedev.axity_consolidation_back.web.mapper.SucursalDTOMapper;
 import jakarta.validation.Valid;

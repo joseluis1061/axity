@@ -1,12 +1,10 @@
 package com.josedev.axity_consolidation_back.web.controller;
 
 import com.josedev.axity_consolidation_back.domain.model.Producto;
-import com.josedev.axity_consolidation_back.domain.service.ProductoService;
+import com.josedev.axity_consolidation_back.domain.repository.ProductoService;
 import com.josedev.axity_consolidation_back.web.dto.ProductoDTO;
 import com.josedev.axity_consolidation_back.web.mapper.ProductoDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;

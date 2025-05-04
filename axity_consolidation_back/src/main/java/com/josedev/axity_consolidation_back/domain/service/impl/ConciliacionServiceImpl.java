@@ -2,16 +2,14 @@ package com.josedev.axity_consolidation_back.domain.service.impl;
 
 import com.josedev.axity_consolidation_back.domain.model.Conciliacion;
 import com.josedev.axity_consolidation_back.domain.model.EstadoConciliacion;
-import com.josedev.axity_consolidation_back.domain.model.SucursalProducto;
 import com.josedev.axity_consolidation_back.domain.model.SucursalProductoId;
-import com.josedev.axity_consolidation_back.domain.service.ConciliacionService;
-import com.josedev.axity_consolidation_back.domain.service.EstadoConciliacionService;
-import com.josedev.axity_consolidation_back.domain.service.SucursalProductoService;
+import com.josedev.axity_consolidation_back.domain.repository.ConciliacionService;
+import com.josedev.axity_consolidation_back.domain.repository.EstadoConciliacionService;
+import com.josedev.axity_consolidation_back.domain.repository.SucursalProductoService;
 import com.josedev.axity_consolidation_back.persistence.entity.ConciliacionEntity;
-import com.josedev.axity_consolidation_back.persistence.entity.SucursalProductoEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.ConciliacionMapper;
 import com.josedev.axity_consolidation_back.persistence.mapper.SucursalProductoIdMapper;
-import com.josedev.axity_consolidation_back.persistence.repository.ConciliacionRepository;
+import com.josedev.axity_consolidation_back.domain.repository.ConciliacionRepository;
 import com.josedev.axity_consolidation_back.persistence.repository.SucursalProductoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implementación de la interfaz ConciliacionService.

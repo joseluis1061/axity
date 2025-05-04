@@ -107,7 +107,8 @@ com.josedev.axity_consolidation_back
 |
 |---domain            # Núcleo de la aplicación - reglas de negocio
     |---model         # Objetos de dominio y entidades de negocio
-    |---service       # Interfaces de servicios de dominio
+    |---service       # Implementaciones de las interfaces de servicios de dominio
+    |---repository    # Interfaces de servicios de dominio
 |
 |---persistence       # Capa de infraestructura - acceso a datos
     |---entity        # Entidades JPA para persistencia
@@ -115,16 +116,19 @@ com.josedev.axity_consolidation_back
     |---repository    # Repositorios Spring Data
 |
 |---web              # Capa de presentación - API REST
-    |---controller   # Controladores REST
-    |---dto          # Objetos de transferencia de datos
+    |---config       # Permisos de uso CORS
+    |---controller   # Controladores REST - Intermediario entre las peticiones HTTP y la capa interna (dominio - servicio y repositorio)
+    |---dto          # Objetos de transferencia de datos entre el cliente y la capa del negocio (domain - model) usando mappers
     |---exception    # Manejadores de excepciones HTTP
+    |---mapper       # Conecta la capa web con la capa del dominio
 ```
 
 **Capas principales:**
 
 1. **Capa de Dominio**: Contiene la lógica de negocio central.
    - `model`: Entidades de dominio y objetos de valor
-   - `service`: Interfaces que definen comportamientos del dominio
+   - `service`: Implementaciones de las interfaces
+   - `repository`: Interfaces que definen comportamientos del dominio
 
 2. **Capa de Persistencia**: Gestiona el acceso a la base de datos.
    - `entity`: Entidades mapeadas a tablas de la base de datos
@@ -133,8 +137,10 @@ com.josedev.axity_consolidation_back
 
 3. **Capa Web**: Expone la API REST y maneja la comunicación con clientes.
    - `controller`: Endpoints REST
+   - `mapper`: Conversión bidireccional entre la capa web y modelos de dominio
    - `dto`: Objetos para intercambio de datos con el cliente
    - `exception`: Manejo global de excepciones HTTP
+   - `config`: Permisos y seguridad de la aplicación
 
 ### Estructura de la base de datos
 

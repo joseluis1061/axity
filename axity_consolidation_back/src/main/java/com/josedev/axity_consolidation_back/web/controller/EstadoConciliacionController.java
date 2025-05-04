@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.web.controller;
 
 import com.josedev.axity_consolidation_back.domain.model.EstadoConciliacion;
-import com.josedev.axity_consolidation_back.domain.service.EstadoConciliacionService;
+import com.josedev.axity_consolidation_back.domain.repository.EstadoConciliacionService;
 import com.josedev.axity_consolidation_back.web.dto.EstadoConciliacionDTO;
 import com.josedev.axity_consolidation_back.web.mapper.EstadoConciliacionDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;

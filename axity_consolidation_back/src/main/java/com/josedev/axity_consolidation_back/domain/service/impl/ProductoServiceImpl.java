@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.domain.service.impl;
 
 import com.josedev.axity_consolidation_back.domain.model.Producto;
-import com.josedev.axity_consolidation_back.domain.service.ProductoService;
+import com.josedev.axity_consolidation_back.domain.repository.ProductoService;
 import com.josedev.axity_consolidation_back.persistence.entity.ProductoEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.ProductoMapper;
 import com.josedev.axity_consolidation_back.persistence.repository.ProductoRepository;

@@ -20,18 +20,3 @@ public interface SucursalMapper {
     @Mapping(source = "nombreSucursal", target = "nombreSucursal")
     SucursalEntity toSucursalEntity(Sucursal sucursal);
 }
-/*
-    SucursalMapper INSTANCE = Mappers.getMapper(SucursalMapper.class);
-
-    Sucursal entityToModel(SucursalEntity entity);
-
-    SucursalEntity modelToEntity(Sucursal model);
-
-    SucursalDTO modelToDto(Sucursal model);
-
-    Sucursal dtoToModel(SucursalDTO dto);
-
-    List<Sucursal> entityListToModelList(List<SucursalEntity> entities);
-
-    List<SucursalDTO> modelListToDtoList(List<Sucursal> models);
- */

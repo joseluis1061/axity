@@ -1,14 +1,11 @@
 package com.josedev.axity_consolidation_back.domain.service.impl;
 
-import com.josedev.axity_consolidation_back.domain.model.Documento;
-import com.josedev.axity_consolidation_back.domain.model.Producto;
-import com.josedev.axity_consolidation_back.domain.model.Sucursal;
 import com.josedev.axity_consolidation_back.domain.model.SucursalProducto;
 import com.josedev.axity_consolidation_back.domain.model.SucursalProductoId;
-import com.josedev.axity_consolidation_back.domain.service.DocumentoService;
-import com.josedev.axity_consolidation_back.domain.service.ProductoService;
-import com.josedev.axity_consolidation_back.domain.service.SucursalProductoService;
-import com.josedev.axity_consolidation_back.domain.service.SucursalService;
+import com.josedev.axity_consolidation_back.domain.repository.DocumentoService;
+import com.josedev.axity_consolidation_back.domain.repository.ProductoService;
+import com.josedev.axity_consolidation_back.domain.repository.SucursalProductoService;
+import com.josedev.axity_consolidation_back.domain.repository.SucursalService;
 import com.josedev.axity_consolidation_back.persistence.entity.SucursalProductoEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.SucursalProductoMapper;
 import com.josedev.axity_consolidation_back.persistence.repository.SucursalProductoRepository;

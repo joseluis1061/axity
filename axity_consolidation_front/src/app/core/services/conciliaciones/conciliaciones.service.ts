@@ -70,7 +70,7 @@ export class ConciliacionesService {
     return this.http.post<string>(`${this.URL}/conciliaciones/procesar/${fecha}`, {});
   }
 
-  // Nuevo método para cargar archivo AS400
+  // Método para cargar archivo AS400
   uploadArchivoAS400(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.URL}/conciliaciones/upload`, formData);
   }

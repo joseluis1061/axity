@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.domain.service.impl;
 
 import com.josedev.axity_consolidation_back.domain.model.EstadoConciliacion;
-import com.josedev.axity_consolidation_back.domain.service.EstadoConciliacionService;
+import com.josedev.axity_consolidation_back.domain.repository.EstadoConciliacionService;
 import com.josedev.axity_consolidation_back.persistence.entity.EstadoConciliacionEntity;
 import com.josedev.axity_consolidation_back.persistence.mapper.EstadoConciliacionMapper;
 import com.josedev.axity_consolidation_back.persistence.repository.EstadoConciliacionRepository;

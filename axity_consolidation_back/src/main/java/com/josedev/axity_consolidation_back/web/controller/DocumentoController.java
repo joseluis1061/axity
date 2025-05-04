@@ -1,7 +1,7 @@
 package com.josedev.axity_consolidation_back.web.controller;
 
 import com.josedev.axity_consolidation_back.domain.model.Documento;
-import com.josedev.axity_consolidation_back.domain.service.DocumentoService;
+import com.josedev.axity_consolidation_back.domain.repository.DocumentoService;
 import com.josedev.axity_consolidation_back.web.dto.DocumentoDTO;
 import com.josedev.axity_consolidation_back.web.mapper.DocumentoDTOMapper;
 import io.swagger.v3.oas.annotations.Operation;
